@@ -6,21 +6,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using EcommerceOne.WebApp.Models;
+using EcommerceOne.WebApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceOne.WebApp.Controllers
 {
-    [Area("Store")]
-    public class HomeController : Controller
+    [Area("Manage")]
+    public class CategoryController : Controller
     {
-        
-        public HomeController()
+
+        private readonly ApplicationDbContext _db;
+        public CategoryController(ApplicationDbContext db)
         {
-            
+            _db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+
+            var CatModel = await _db.Category.ToListAsync();
+
+            return View(CatModel);
         }
 
         public IActionResult Privacy()

@@ -9,11 +9,10 @@ using EcommerceOne.WebApp.Models;
 
 namespace EcommerceOne.WebApp.Controllers
 {
-    [Area("Store")]
-    public class HomeController : Controller
+    [Area("Manage")]
+    public class AdminController : Controller
     {
-        
-        public HomeController()
+        public AdminController()
         {
             
         }

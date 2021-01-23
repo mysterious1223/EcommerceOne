@@ -1,0 +1,11 @@
+﻿@model IEnumerable<EcommerceOne.WebApp.Category>
+@{
+    ViewData["Title"] = "Category Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="Container border backgroundWhite">
+    <p>Category!</p>
+    @Model.Count()
+
+</div>
