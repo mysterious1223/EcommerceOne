@@ -24,10 +24,53 @@ namespace EcommerceOne.WebApp.Controllers
         public async Task<IActionResult> IndexAsync()
         {
 
-            var CatModel = await _db.Category.ToListAsync();
+            var CatModel = await _db.Category.ToListAsync();    
 
-            return View(CatModel);
+            CategoryViewModel Categoryviewmodel = new CategoryViewModel () {
+                Categories = CatModel,
+                Category = new Category()
+            };
+
+            return View(Categoryviewmodel);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategoryAsync(Category category)
+        {
+            // we will need a new view model. one to pass the list of current categories and one for the new category
+            if(!ModelState.IsValid)
+            {
+                return View(category);
+            }
+
+            await _db.Category.AddAsync(category);
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // API Call to delete?
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCategory (int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index)); 
+            }
+
+            // delete
+
+            var category = await _db.Category.FindAsync(id);
+             _db.Category.Remove(category);
+
+            await _db.SaveChangesAsync();
+
+            
+            return RedirectToAction(nameof(Index)); 
+        }
+
 
         public IActionResult Privacy()
         {

@@ -1,11 +1,133 @@
-﻿@model IEnumerable<EcommerceOne.WebApp.Category>
+﻿@model CategoryViewModel
 @{
     ViewData["Title"] = "Category Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="Container border backgroundWhite">
-    <p>Category!</p>
-    @Model.Count()
+<div>
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info text-dark">Category List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#CategoryCreateModal">
+                Create Category
+            </button>
+        </div>
+    </div>
+    <br />
+    <div>
 
+        @if (@Model.Categories.Count() > 0)
+        {
+            <table class="table col-md-8" style="margin-left: auto; margin-right: auto;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => m.Category.Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => m.Category.Name)
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Categories)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(m => item.Id)</td>
+                            <td>@Html.DisplayFor(m => item.Name)</td>
+                            <td>
+                                
+                                <a><i class="fas fa-edit"></i></a>
+                            
+                                <a class="deleteCategory" data-id="@item.Id"><i class="fas fa-trash-alt"></i></a>
+                               
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h1>Empty!</h1>
+        }
+
+
+    </div>
 </div>
+
+<div class="modal fade" id="CategoryCreateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light justify-content-center">
+                <h5 class="modal-title">Order Details</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+                <form method="post" asp-action="CreateCategory">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <div class="col-2">
+                            <label asp-for="Category.Name" class="col-form-label"></label>
+                        </div>
+                        <div class="col-5">
+                            <input asp-for="Category.Name" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Category.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-5 offset-2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" style="width:20%" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        $(".deleteCategory").click(function () {
+
+
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+
+
+                if (confirm("Delete?"))
+                {
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/Manage/Category/DeleteCategory",
+                        data: { "Id": id },
+                        success: function (data) {
+                            location.reload();
+
+                        },
+                        error: function () {
+                            alert("Delete failed.");
+                        }
+                    });
+                }
+
+
+                
+            });
+    </script>
+
+
+}
