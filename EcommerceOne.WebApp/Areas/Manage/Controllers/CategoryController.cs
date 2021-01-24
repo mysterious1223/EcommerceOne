@@ -67,10 +67,50 @@ namespace EcommerceOne.WebApp.Controllers
 
             await _db.SaveChangesAsync();
 
+
+            return RedirectToAction(nameof(Index)); 
+        }
+        [ActionName("EditCategory")]
+        public async Task<IActionResult> EditCategory (int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index)); 
+            }
+
+            // delete
+
+            var category = await _db.Category.FindAsync(id);
+            
+            if(category == null)
+            {
+                return RedirectToAction(nameof(Index)); 
+            }
+            
+            return Json (category);
+        }
+
+        [ActionName("EditCategoryPost")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCategoryPost (Category category)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(category);
+            }
+
+            // delete
+
+            var categoryFromDb = await _db.Category.FindAsync(category.Id);
+            
+            categoryFromDb.Name = category.Name;
+
+            await _db.SaveChangesAsync();
+
             
             return RedirectToAction(nameof(Index)); 
         }
-
 
         public IActionResult Privacy()
         {
