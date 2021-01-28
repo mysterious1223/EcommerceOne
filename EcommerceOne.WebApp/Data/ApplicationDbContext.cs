@@ -12,7 +12,7 @@ namespace EcommerceOne.WebApp.Data
 
 
         public DbSet<Category> Category {get; set;}
-
+        public DbSet<SubCategory> SubCategory {get; set;}     
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

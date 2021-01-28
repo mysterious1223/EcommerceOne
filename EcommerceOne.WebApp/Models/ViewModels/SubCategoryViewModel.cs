@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace EcommerceOne.WebApp
 {
-    public class CategoryViewModel
+    public class SubCategoryViewModel
     {
+        public SubCategory SubCategory {get; set;}
+
         public IEnumerable<Category> Categories {get; set;}
 
-        public Category Category {get; set;}
+        public List<SubCategory> SubCategories {get; set;}
 
         public string StatusMessage { get; set; }
     }

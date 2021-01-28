@@ -97,7 +97,7 @@ namespace EcommerceOne.WebApp.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return View(category);
+                return RedirectToAction(nameof(Index));
             }
 
             // delete
@@ -109,7 +109,7 @@ namespace EcommerceOne.WebApp.Controllers
             await _db.SaveChangesAsync();
 
             
-            return RedirectToAction(nameof(Index)); 
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()

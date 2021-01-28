@@ -66,23 +66,24 @@
     <div class="modal-dialog-centered modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success text-light justify-content-center">
-                <h5 class="modal-title">Order Details</h5>
+                <h5 class="modal-title">CreateCategory</h5>
             </div>
             <div class="modal-body justify-content-center" id="myModalContent">
                 <form method="post" asp-action="CreateCategory">
+                    <input hidden id="CreateCategoryId" asp-for="Category.Id" />
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group row">
-                        <div class="col-2">
+                        <div class="col-6">
                             <label asp-for="Category.Name" class="col-form-label"></label>
                         </div>
-                        <div class="col-5">
-                            <input asp-for="Category.Name" class="form-control" />
+                        <div class="col-6">
+                            <input id="CreateCategoryName" asp-for="Category.Name" class="form-control" />
                         </div>
                         <span asp-validation-for="Category.Name" class="text-danger"></span>
                     </div>
                     <div class="form-group row">
                         <div class="col-5 offset-2">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </div>
 
@@ -101,24 +102,24 @@
     <div class="modal-dialog-centered modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success text-light justify-content-center">
-                <h5 class="modal-title">Order Details</h5>
+                <h5 class="modal-title">EditCategory</h5>
             </div>
             <div class="modal-body justify-content-center" id="myModalContent">
                 <form method="post" asp-action="EditCategoryPost">
-                    <input hidden id="EditIdField" asp-for="Category.Id" />
+                    <input hidden id="EditCategoryId" asp-for="Category.Id" />
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group row">
                         <div class="col-6">
                             <label asp-for="Category.Name" class="col-form-label"></label>
                         </div>
                         <div class="col-6">
-                            <input id="EditNameField" asp-for="Category.Name" class="form-control" />
+                            <input id="EditCategoryName" asp-for="Category.Name" class="form-control" />
                         </div>
                         <span asp-validation-for="Category.Name" class="text-danger"></span>
                     </div>
                     <div class="form-group row">
                         <div class="col-5 offset-2">
-                            <button type="submit" class="btn btn-primary">update</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </div>
 
@@ -163,7 +164,7 @@
             });
             $(".editCategory").click(function () {
 
-
+                
                 var $buttonClicked = $(this);
                 var id = $buttonClicked.attr('data-id');
                 var name = "";
@@ -177,10 +178,10 @@
                         }
 
                     });
-
+                   
                     // do something, load modal
-                    $('#EditIdField').val(id);
-                    $('#EditNameField').val(name);
+                    $('#EditCategoryId').val(id);
+                    $('#EditCategoryName').val(name);
                     $('#CategoryEditModal').modal('show');
           
             })
