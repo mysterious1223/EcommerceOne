@@ -88,7 +88,7 @@
                             <label asp-for="SubCategory.CategoryId" class="col-form-label"></label>
                         </div>
                         <div class="col-6">
-                           <select id="ddlCategorylist" asp-for="SubCategory.CategoryId" 
+                           <select id="ddlSubCategorylist" asp-for="SubCategory.CategoryId" 
                            asp-items="Model.Categories.ToSelectListItem(Model.SubCategory.CategoryId)" 
                            class="form-control"></select>
                         </div>
@@ -110,12 +110,117 @@
 </div>
 
 
+<div class="modal fade" id="SubCategoryEditModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light justify-content-center">
+                <h5 class="modal-title">Edit SubCategory</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+                <form method="post" asp-action="EditSubCategory">
+                    <input hidden id="EditSubCategoryId" asp-for="SubCategory.Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label asp-for="SubCategory.Name" class="col-form-label"></label>
+                        </div>
+                        <div class="col-6">
+                            <input id="EditSubCategoryName" asp-for="SubCategory.Name" class="form-control" />
+                        </div>
+                        <span asp-validation-for="SubCategory.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label asp-for="SubCategory.CategoryId" class="col-form-label"></label>
+                        </div>
+                        <div class="col-6">
+                           <select id="ddlSubCategorylist" asp-for="SubCategory.CategoryId" 
+                           class="form-control" disabled><option value="0" id="subOption"></option></select>
+                        </div>
+                      
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-5 offset-2">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" style="width:20%" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
 @section Scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    
+    <script>
+        $(".deleteSubCategory").click(function () {
+
+
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+
+
+                if (confirm("Delete?"))
+                {
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/Manage/SubCategory/DeleteSubCategory",
+                        data: { "Id": id },
+                        success: function (data) {
+                            location.reload();
+
+                        },
+                        error: function () {
+                            alert("Delete failed.");
+                        }
+                    });
+                }
+   
+            });
+            $(".editSubCategory").click(function () {
+
+                
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var name = "";
+                var catname= "";
+           
+
+                $.getJSON('/Manage/SubCategory/EditSubCategory', { id: id }, function (data) {
+                    
+                    $.each(data, function (i, item) {
+              
+                        
+                        if (i == "name")
+                        {
+                            name = item;
+                        }
+                        if(i == "catname")
+                        {
+                            catname = item;
+                        }
+
+                    });
+                   
+                    // do something, load modal
+                    $('#EditSubCategoryId').val(id);
+                    $('#EditSubCategoryName').val(name);
+                    // we need category id from our json
+                    $('#subOption').html(catname);
+
+                    $('#SubCategoryEditModal').modal('show');
+          
+            })
+            });
+    </script>
 
 }

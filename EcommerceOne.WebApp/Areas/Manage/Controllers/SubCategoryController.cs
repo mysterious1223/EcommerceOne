@@ -53,5 +53,77 @@ namespace EcommerceOne.WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // API Call to delete?
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSubCategory (int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index)); 
+            }
+
+            // delete
+
+            var Subcategory = await _db.SubCategory.FindAsync(id);
+             _db.SubCategory.Remove(Subcategory);
+
+            await _db.SaveChangesAsync();
+
+
+            return RedirectToAction(nameof(Index)); 
+        }
+        [ActionName("EditSubCategory")]
+        public async Task<IActionResult> EditSubCategory (int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index)); 
+            }
+
+            // delete
+
+            var SubCategoryFromDb = await _db.SubCategory.FindAsync(id);
+            var CategoryFromDb = await _db.Category.FindAsync(SubCategoryFromDb.CategoryId);
+            if(SubCategoryFromDb == null )
+            {
+                return RedirectToAction(nameof(Index)); 
+            }
+            
+            var returned = new {
+                name = SubCategoryFromDb.Name,
+                id = SubCategoryFromDb.Id,
+                catname = CategoryFromDb.Name
+
+            };
+
+
+
+
+            return Json (returned);
+        }
+        
+        [ActionName("EditSubCategory")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSubCategory (SubCategory Subcategory)
+        {
+            if(!ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            // delete
+
+            var subcategoryFromDb = await _db.SubCategory.FindAsync(Subcategory.Id);
+            
+            subcategoryFromDb.Name = Subcategory.Name;
+
+            await _db.SaveChangesAsync();
+
+            
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }
