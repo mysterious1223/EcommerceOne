@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using EcommerceOne.WebApp.Models;
 using EcommerceOne.WebApp.Data;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace EcommerceOne.WebApp.Controllers
 {
@@ -25,7 +27,6 @@ namespace EcommerceOne.WebApp.Controllers
         {
 
             var SubViewModel = new SubCategoryViewModel () {
-
                 SubCategory = new SubCategory(),
                 Categories = await _db.Category.ToListAsync(),
                 SubCategories = await _db.SubCategory.ToListAsync()
@@ -122,6 +123,20 @@ namespace EcommerceOne.WebApp.Controllers
 
             
             return RedirectToAction(nameof(Index));
+        }
+
+        [ActionName("GetSubcategory")]
+        public async Task<IActionResult> GetSubCategory(int id)
+        {
+            List<SubCategory> subCategories = new List<SubCategory>();
+
+            //subCategories = await (from subCategory in _db.SubCategory
+              //               where subCategory.CategoryId == id
+                //             select subCategory).ToListAsync();
+                
+            subCategories = await _db.SubCategory.Where(s => s.CategoryId == id).ToListAsync();
+
+            return Json(new SelectList(subCategories, "Id", "Name"));
         }
 
 

@@ -1,0 +1,176 @@
+﻿@model MenuItemViewModel
+@using EcommerceOne.WebApp.Extensions
+@{
+    ViewData["Title"] = "Item Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info text-dark">Item List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#ItemCreateModal">
+                Create Item
+            </button>
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#ItemCreateModal">
+                Import Items
+            </button>
+        </div>
+    </div>
+    <br />
+    <div>
+        @if (@Model.items.Count() > 0)
+        {
+            <table class="table col-md-8" style="margin-left: auto; margin-right: auto;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => m.item.Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => m.item.Name)
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.items)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(m => item.Id)</td>
+                            <td>@Html.DisplayFor(m => item.Name)</td>
+                            <td>
+                                
+                                <a class="" data-id="@item.Id"><i class="fas fa-edit"></i></a>
+                            
+                                <a class="" data-id="@item.Id"><i class="fas fa-trash-alt"></i></a>
+                               
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h1>Empty!</h1>
+        }
+
+    </div>
+</div>
+
+<div class="modal fade" id="ItemCreateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light justify-content-center">
+                <h5 class="modal-title">Create Item</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+                <form method="post" asp-action="CreateItemPost" enctype="multipart/form-data">
+                    <input hidden id="CreateItemId" asp-for="item.Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label asp-for="item.Name" class="col-form-label"></label>
+                        </div>
+                        <div class="col-6">
+                            <input id="CreateItemName" asp-for="item.Name" class="form-control" />
+                        </div>
+                        <span asp-validation-for="item.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label asp-for="item.Description" class="col-form-label"></label>
+                        </div>
+                        <div class="col-6">
+                            <input id="CreateItemDescription" asp-for="item.Description" class="form-control" />
+                        </div>
+                        <span asp-validation-for="item.Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label asp-for="item.Price" class="col-form-label"></label>
+                        </div>
+                        <div class="col-6">
+                            <input id="CreateItemPrice" asp-for="item.Price" class="form-control" />
+                        </div>
+                        <span asp-validation-for="item.Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label asp-for="item.CategoryId" class="col-form-label"></label>
+                        </div>
+                        <div class="col-6">
+                            <select asp-for="item.CategoryId" id="CategoryId" asp-items="Model.Category.ToSelectListItem(Model.item.CategoryId)" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label asp-for="item.SubCategoryId" class="col-form-label"></label>
+                        </div>
+                        <div class="col-6">
+                            <select asp-for="item.SubCategoryId" id="SubCategoryId" asp-items="@(new SelectList(string.Empty,"Id","Name"))" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label asp-for="item.ImageIcon" class="col-form-label"></label>
+                        </div>
+                        <div class="col-6">
+                            <input type="file" name="files" multiple class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-5 offset-2">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" style="width:20%" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        $(document).ready(function () {
+            getSubCategory();
+            $('#CategoryId').change(function () {
+                getSubCategory();
+            });
+        });
+
+
+        function getSubCategory() {
+            var url = '@Url.Content("~/")' + "Manage/SubCategory/GetSubcategory";
+            var ddlsoruce = '#CategoryId';
+            $.getJSON(url, { id: $(ddlsoruce).val() }, function (data) {
+                var items = '';
+                $('#SubCategoryId').empty();
+                $.each(data, function (i, subcategory) {
+                    items += "<option value='" + subcategory.value + "'>" + subcategory.text + "</option>";
+                });
+
+                $('#SubCategoryId').html(items);
+            })
+        }
+
+
+    </script>
+
+
+}

@@ -10,7 +10,7 @@ namespace EcommerceOne.WebApp.Data
     public class ApplicationDbContext : IdentityDbContext
     {
 
-
+        public DbSet<Item> Item {get; set;}
         public DbSet<Category> Category {get; set;}
         public DbSet<SubCategory> SubCategory {get; set;}     
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
